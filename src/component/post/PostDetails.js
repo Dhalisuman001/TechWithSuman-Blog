@@ -11,15 +11,16 @@ import LoadingComponent from "../../redux/utils/LoadingComponent";
 import AddComment from "../comments/NewComment";
 import CommentsList from "../comments/CommentList";
 const PostDetails = () => {
+ 
   const { id } = useParams();
   //   console.log(id);
 
   //dispatch
   const dispatch = useDispatch();
   /// fetch post details
-
+const user = useSelector(state=>state.users?.userAuth)
   const comment = useSelector(state=>state.comment);
-  const {commentCreated,commentDeleted} = comment
+  const {commentCreated,commentDeleted,} = comment
   useEffect(() => {
     dispatch(fetchPostDetailsAction(id));
     // eslint-disable-next-line
@@ -99,7 +100,8 @@ const PostDetails = () => {
             </div>
           </div>
           {/* Add comment Form component here */}
-          <AddComment postId={id} />
+          {user?<AddComment postId={id} />:null}
+          
           <div className="flex justify-center  items-center">
             {/* <CommentsList comments={post?.comments} postId={post?._id} /> */}
             <CommentsList

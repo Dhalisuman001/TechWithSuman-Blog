@@ -12,7 +12,7 @@ import {
 } from "@heroicons/react/outline";
 import { PlusIcon } from "@heroicons/react/solid";
 import { logoutUserAction } from "../../../redux/slices/users/userSlices";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -28,6 +28,8 @@ function classNames(...classes) {
 }
 
 const AdminNavbar = () => {
+  //user details fetch
+  const author = useSelector(state=>state.users?.userAuth)
   //Navigation
   const userNavigation = [
     { name: "Your Profile", href: `/profile` },
@@ -111,7 +113,7 @@ const AdminNavbar = () => {
                             <span className="sr-only">Open user menu</span>
                             <img
                               className="h-8 w-8 rounded-full"
-                              // src={userAuth?.profilePhoto}
+                               src={author?.profilePhoto}
                               alt="Admin Profile"
                             />
                           </Menu.Button>

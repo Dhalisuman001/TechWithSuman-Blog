@@ -10,7 +10,7 @@ import {
   BookOpenIcon,
 } from "@heroicons/react/outline";
 import { PlusIcon, LogoutIcon } from "@heroicons/react/solid";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "../../../redux/slices/users/userSlices";
 
 const navigation = [
@@ -25,6 +25,8 @@ function classNames(...classes) {
 }
 
 const PrivateNavbar = ({ isLogin }) => {
+   //user details fetch
+   const author = useSelector(state=>state.users?.userAuth)
   const userNavigation = [
     { name: "Your Profile", href: `/profile` },
     { name: "Change your password", href: "/update-password" },
@@ -106,7 +108,7 @@ const PrivateNavbar = ({ isLogin }) => {
                             <span className="sr-only">Open user menu</span>
                             <img
                               className="h-8 w-8 rounded-full"
-                              // src={isLogin?.profilePhoto}
+                               src={author?.profilePhoto}
                               alt=""
                             />
                           </Menu.Button>

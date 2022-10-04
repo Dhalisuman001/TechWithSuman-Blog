@@ -12,6 +12,7 @@ import CreatePost from "./component/post/CreatePost";
 import PostsList from "./component/post/PostList";
 import PostDetails from "./component/post/PostDetails";
 import UpdatePost from "./component/post/UpdatePost";
+import UpdateComment from "./component/comments/UpdateComment";
 
 function App() {
   return (
@@ -60,6 +61,15 @@ function App() {
           element={
             <PrivateRoute>
               <UpdatePost />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/update-comment/:id"
+          element={
+            <PrivateRoute>
+              <UpdateComment />
             </PrivateRoute>
           }
         />
