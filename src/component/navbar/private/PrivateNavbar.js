@@ -24,11 +24,12 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const PrivateNavbar = ({ isLogin }) => {
+const PrivateNavbar = () => {
+  
    //user details fetch
    const author = useSelector(state=>state.users?.userAuth)
   const userNavigation = [
-    { name: "Your Profile", href: `/profile` },
+    { name: "Your Profile", href: `/profile/${author?._id}` },
     { name: "Change your password", href: "/update-password" },
   ];
   const dispatch = useDispatch();

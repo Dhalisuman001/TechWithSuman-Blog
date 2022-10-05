@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import axios from "axios";
 import { BaseUrl } from "../../utils/BaseUrl";
 
@@ -68,6 +69,60 @@ export const logoutUserAction = createAsyncThunk(
     }
   }
 );
+// fetch users details
+export const fetchUserDetailsAction = createAsyncThunk(
+  "user/profile",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    ///http
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.get(
+        `${BaseUrl}/api/v1/users/profile/${id}`,
+
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//upload profile photo action
+export const uploadPhotoAction = createAsyncThunk(
+  "profile-photo/upload",
+  async (userImg, { rejectWithValue, getState, dispatch }) => {
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const formData = new FormData();
+      formData.append("image", userImg?.image);
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/profile-photo-upload`,
+        formData,
+        config
+      );
+      
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
 const userLoginFormLoacalStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -94,6 +149,9 @@ const userLoginFormLoacalStorage = localStorage.getItem("userInfo")
 //     },
 //   },
 // });
+
+
+
 
 //object notaion
 const registerUsersSlices = createSlice({
@@ -142,12 +200,42 @@ const registerUsersSlices = createSlice({
       state.loading = true;
     });
     builder.addCase(logoutUserAction.fulfilled, (state, action) => {
-      state.userAuth = undefined;
+      state.userAuth = action?.payload;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
     builder.addCase(logoutUserAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //user details
+    builder.addCase(fetchUserDetailsAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchUserDetailsAction.fulfilled, (state, action) => {
+      state.profile = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(fetchUserDetailsAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //upload profile photo 
+    builder.addCase(uploadPhotoAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(uploadPhotoAction.fulfilled, (state, action) => {
+      state.uploadedPhoto = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(uploadPhotoAction.rejected, (state, action) => {
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
       state.loading = false;

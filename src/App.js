@@ -13,6 +13,8 @@ import PostsList from "./component/post/PostList";
 import PostDetails from "./component/post/PostDetails";
 import UpdatePost from "./component/post/UpdatePost";
 import UpdateComment from "./component/comments/UpdateComment";
+import Profile from "./component/user/profile/Profile";
+import UploadProfilePhoto from "./component/user/profile/UploadProfilePhoto";
 
 function App() {
   return (
@@ -70,6 +72,24 @@ function App() {
           element={
             <PrivateRoute>
               <UpdateComment />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/profile/:id"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/upload-profile-photo"
+          element={
+            <PrivateRoute>
+              <UploadProfilePhoto />
             </PrivateRoute>
           }
         />

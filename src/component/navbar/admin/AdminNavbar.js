@@ -32,8 +32,9 @@ const AdminNavbar = () => {
   const author = useSelector(state=>state.users?.userAuth)
   //Navigation
   const userNavigation = [
-    { name: "Your Profile", href: `/profile` },
+    { name: "Your Profile", href: `/profile/${author?._id}` },
     { name: "Change your password", href: "/update-password" },
+    { name: "Settings", href: "/update-password" },
   ];
   const dispatch = useDispatch();
   return (
