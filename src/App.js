@@ -15,7 +15,7 @@ import UpdatePost from "./component/post/UpdatePost";
 import UpdateComment from "./component/comments/UpdateComment";
 import Profile from "./component/user/profile/Profile";
 import UploadProfilePhoto from "./component/user/profile/UploadProfilePhoto";
-
+import UpdateProfileForm from "./component/user/profile/UploadProfile";
 function App() {
   return (
     <Router>
@@ -90,6 +90,15 @@ function App() {
           element={
             <PrivateRoute>
               <UploadProfilePhoto />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/update-profile/:id"
+          element={
+            <PrivateRoute>
+              <UpdateProfileForm />
             </PrivateRoute>
           }
         />

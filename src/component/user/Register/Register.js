@@ -38,11 +38,11 @@ const Register = () => {
 
   //fetch data from stores
   const storeData = useSelector((store) => store?.users);
-  const { loading, appError, serverErr, register } = storeData;
+  const { loading, appError, serverErr, register,userAuth } = storeData;
   console.log(register);
 
   //redirect
-  if (register) return <Navigate to="/profile" />;
+  if (register) return <Navigate to={`/profile/${userAuth?._id}`} />;
   return (
     <section className="relative py-20 2xl:py-40 bg-gray-800 overflow-hidden">
       <div className="relative container px-4 mx-auto">

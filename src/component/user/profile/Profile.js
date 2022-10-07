@@ -11,6 +11,7 @@ import {
 import { MailIcon, EyeIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import DateFormatter from "../../../redux/utils/DateFormatter";
+import LoadingComponent from "../../../redux/utils/LoadingComponent";
 
 export default function Profile() {
     // dispatch
@@ -22,11 +23,19 @@ export default function Profile() {
         dispatch(fetchUserDetailsAction(id))
     },[id,dispatch])
     const user = useSelector(state=>state.users)
-    const {profile} = user;
+    const {profile,appErr,serverErr,loading} = user;
   return (
     <>
-      <div className="h-screen flex overflow-hidden bg-white">
-        {/* Static sidebar for desktop */}
+     <div className="min-h-screen bg-green-600 flex justify-center items-center">
+        {loading ? (
+          <LoadingComponent />
+        ) : appErr || serverErr ? (
+          <h2 className="text-yellow-400 text-2xl">
+            {serverErr} {appErr}
+          </h2>
+        ) : (
+          <div className="h-screen w-full flex overflow-hidden bg-white bg-cover">
+            {/* Static sidebar for desktop */}
 
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
           <div className="flex-1 relative z-0 flex overflow-hidden">
@@ -137,7 +146,7 @@ export default function Profile() {
 
                           <>
                             <Link
-                              to="/update-profile"
+                              to={`/update-profile/${id}`}
                               className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                             >
                               <UserIcon
@@ -248,6 +257,7 @@ export default function Profile() {
             </main>
           </div>
         </div>
+      </div> )}
       </div>
     </>
   );

@@ -1,7 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 
 import axios from "axios";
 import { BaseUrl } from "../../utils/BaseUrl";
+
+
+//reset user update action
+const resetUserUpdateAction = createAction('reset/update/user');
 
 //register action
 export const registerUserAction = createAsyncThunk(
@@ -20,6 +24,39 @@ export const registerUserAction = createAsyncThunk(
         config
       );
 
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//update user action
+export const updateUserAction = createAsyncThunk(
+  "users/update",
+  async (userData, { rejectWithValue, getState, dispatch }) => {
+    try {
+      //http call register api
+      const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/profile`,
+        {
+          firstname:userData?.firstname,
+          lastnamename:userData?.lastnamename,
+          email:userData?.email,
+          bio:userData?.bio,
+        },
+        config
+      );
+   dispatch(resetUserUpdateAction());
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -64,7 +101,9 @@ export const logoutUserAction = createAsyncThunk(
     try {
       localStorage.removeItem("userInfo");
     } catch (error) {
-      if (!error?.response) throw error;
+      if (!error?.response) {
+        throw error;
+      }
       return rejectWithValue(error?.response?.data);
     }
   }
@@ -118,7 +157,9 @@ export const uploadPhotoAction = createAsyncThunk(
       
       return data;
     } catch (error) {
-      if (!error?.response) throw error;
+      if (!error?.response) {
+        throw error;
+      }
       return rejectWithValue(error?.response?.data);
     }
   }
@@ -236,6 +277,25 @@ const registerUsersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(uploadPhotoAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //upload profile photo 
+    builder.addCase(updateUserAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(resetUserUpdateAction, (state, action) => {
+      state.isUpdate = true;
+    });
+    builder.addCase(updateUserAction.fulfilled, (state, action) => {
+      state.userUpdated = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+      state.isUpdate = false;
+    });
+    builder.addCase(updateUserAction.rejected, (state, action) => {
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
       state.loading = false;
