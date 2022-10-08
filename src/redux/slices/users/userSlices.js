@@ -164,6 +164,66 @@ export const uploadPhotoAction = createAsyncThunk(
     }
   }
 );
+//follow user action
+export const userFollowAction = createAsyncThunk(
+  "user/follow",
+  async (userId, { rejectWithValue, getState, dispatch }) => {
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/follow`,
+        {
+          followId: userId
+        },
+         config
+      );
+      
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//unfollow user action
+export const userUnfollowAction = createAsyncThunk(
+  "user/unfollow",
+  async (userId, { rejectWithValue, getState, dispatch }) => {
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/unfollow`,
+        {
+          unFollowId: userId
+        },
+         config
+      );
+      
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
 const userLoginFormLoacalStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -253,18 +313,18 @@ const registerUsersSlices = createSlice({
     });
     //user details
     builder.addCase(fetchUserDetailsAction.pending, (state, action) => {
-      state.loading = true;
+      state.profileLoading = true;
     });
     builder.addCase(fetchUserDetailsAction.fulfilled, (state, action) => {
       state.profile = action?.payload;
-      state.loading = false;
-      state.appErr = undefined;
-      state.serverErr = undefined;
+      state.profileLoading = false;
+      state.profileAppErr = undefined;
+      state.profileServerErr = undefined;
     });
     builder.addCase(fetchUserDetailsAction.rejected, (state, action) => {
-      state.appErr = action?.payload?.message;
-      state.serverErr = action?.error?.message;
-      state.loading = false;
+      state.profileAppErr = action?.payload?.message;
+      state.profileServerErr = action?.error?.message;
+      state.profileLoading = false;
     });
     //upload profile photo 
     builder.addCase(uploadPhotoAction.pending, (state, action) => {
@@ -281,21 +341,38 @@ const registerUsersSlices = createSlice({
       state.serverErr = action?.error?.message;
       state.loading = false;
     });
-    //upload profile photo 
-    builder.addCase(updateUserAction.pending, (state, action) => {
+    //user follow action 
+    builder.addCase(userFollowAction.pending, (state, action) => {
       state.loading = true;
     });
-    builder.addCase(resetUserUpdateAction, (state, action) => {
-      state.isUpdate = true;
-    });
-    builder.addCase(updateUserAction.fulfilled, (state, action) => {
-      state.userUpdated = action?.payload;
+    
+    builder.addCase(userFollowAction.fulfilled, (state, action) => {
+      state.followed = action?.payload;
+      state.unfollowed = undefined;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
       state.isUpdate = false;
     });
-    builder.addCase(updateUserAction.rejected, (state, action) => {
+    builder.addCase(userFollowAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //user unfollow action 
+    builder.addCase(userUnfollowAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    
+    builder.addCase(userUnfollowAction.fulfilled, (state, action) => {
+      state.unfollowed = action?.payload;
+      state.followed = undefined;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+      state.isUpdate = false;
+    });
+    builder.addCase(userUnfollowAction.rejected, (state, action) => {
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
       state.loading = false;

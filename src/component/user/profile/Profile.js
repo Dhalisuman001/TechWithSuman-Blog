@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import {fetchUserDetailsAction} from '../../../redux/slices/users/userSlices'
+import {fetchUserDetailsAction, userFollowAction,userUnfollowAction} from '../../../redux/slices/users/userSlices'
 import {
   HeartIcon,
   EmojiSadIcon,
@@ -14,24 +14,26 @@ import DateFormatter from "../../../redux/utils/DateFormatter";
 import LoadingComponent from "../../../redux/utils/LoadingComponent";
 
 export default function Profile() {
+  
     // dispatch
     const dispatch = useDispatch();
     // get id
     const {id} = useParams()
+    const user = useSelector(state=>state.users)
+    const {profile,followed,unfollowed,profileAppErr,profileServerErr,profileLoading} = user;
     // getting user details
     useEffect(()=>{
         dispatch(fetchUserDetailsAction(id))
-    },[id,dispatch])
-    const user = useSelector(state=>state.users)
-    const {profile,appErr,serverErr,loading} = user;
+    },[id,dispatch,followed,unfollowed])
+    
   return (
     <>
      <div className="min-h-screen bg-green-600 flex justify-center items-center">
-        {loading ? (
+        {profileLoading ? (
           <LoadingComponent />
-        ) : appErr || serverErr ? (
+        ) : profileAppErr || profileServerErr ? (
           <h2 className="text-yellow-400 text-2xl">
-            {serverErr} {appErr}
+            {profileServerErr} {profileAppErr}
           </h2>
         ) : (
           <div className="h-screen w-full flex overflow-hidden bg-white bg-cover">
@@ -114,33 +116,40 @@ export default function Profile() {
                         <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                           {/* // Hide follow button from the same */}
                           <div>
-                            <button
-                              // onClick={() =>
-                              //   dispatch(unFollowUserAction(profile?._id))
-                              // }
-                              className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                            >
-                              <EmojiSadIcon
-                                className="-ml-1 mr-2 h-5 w-5 text-gray-400"
-                                aria-hidden="true"
-                              />
-                              <span>Unfollow</span>
-                            </button>
+                                {profile?.isFollwing ? (
+                                  <button
+                                    onClick={() =>
+                                      dispatch(userUnfollowAction(id))
+                                    }
+                                    className="mr-2 inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                                  >
+                                    <EmojiSadIcon
+                                      className="-ml-1 mr-2 h-5 w-5 text-gray-400"
+                                      aria-hidden="true"
+                                    />
+                                    <span>Unfollow</span>
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() =>
+                                      dispatch(userFollowAction(id))
+                                    }
+                                    type="button"
+                                    className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                                  >
+                                    <HeartIcon
+                                      className="-ml-1 mr-2 h-5 w-5 text-gray-400"
+                                      aria-hidden="true"
+                                    />
+                                    <span>Follow </span>
+                                    <span className="pl-2">
+                                      {profile?.followers?.length}
+                                    </span>
+                                  </button>
+                                )}
 
-                            <>
-                              <button
-                                // onClick={followHandler}
-                                type="button"
-                                className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                              >
-                                <HeartIcon
-                                  className="-ml-1 mr-2 h-5 w-5 text-gray-400"
-                                  aria-hidden="true"
-                                />
-                                <span>Follow </span>
-                              </button>
-                            </>
-                          </div>
+                                <></>
+                              </div>
 
                           {/* Update Profile */}
 
