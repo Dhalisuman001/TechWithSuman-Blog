@@ -6,7 +6,7 @@ const AdminRoute = ({ children }) => {
   //check if user is loggin
   const user = useSelector((state) => state?.users);
   const { userAuth } = user;
-  if (!userAuth?.isAdmin) return <Navigate to="/" />;
+  if (!userAuth?.isAdmin) return <Navigate to={`/profile/${userAuth?._id}`} />;
 
   return children;
 };
