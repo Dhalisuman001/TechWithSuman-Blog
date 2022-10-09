@@ -17,6 +17,7 @@ import Profile from "./component/user/profile/Profile";
 import UploadProfilePhoto from "./component/user/profile/UploadProfilePhoto";
 import UpdateProfileForm from "./component/user/profile/UploadProfile";
 import SendEmail from "./component/user/email/SendEmail";
+import UsersList from "./component/user/user__list/UserList";
 function App() {
   return (
     <Router>
@@ -46,6 +47,15 @@ function App() {
           element={
             <AdminRoute>
               <AddNewCategory />
+            </AdminRoute>
+          }
+        />
+        <Route
+          exact
+          path="/users"
+          element={
+            <AdminRoute>
+              <UsersList />
             </AdminRoute>
           }
         />

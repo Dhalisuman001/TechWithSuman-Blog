@@ -68,7 +68,7 @@ export default function Profile() {
                           <h1 className="text-2xl font-bold text-gray-900 ">
                             {profile?.firstname} {profile?.lastname}
 
-                            <span className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                            <span className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 ml-2">
                               {profile?.accountType}
                             </span>
                             {/* Display if verified or not */}
