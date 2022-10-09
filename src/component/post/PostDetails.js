@@ -55,6 +55,7 @@ const user = useSelector(state=>state.users?.userAuth)
               </h2>
 
               {/* User */}
+              <Link to={`/profile/${postDetails?.author?._id}`}>
               <div className="inline-flex pt-14 mb-14 items-center border-t border-gray-500">
                 <img
                   className="mr-8 w-20 lg:w-24 h-20 lg:h-24 rounded-full"
@@ -73,6 +74,7 @@ const user = useSelector(state=>state.users?.userAuth)
                   </p>
                 </div>
               </div>
+              </Link>
               {/* Post description */}
               <div className="max-w-xl mx-auto">
                 <p className="mb-6 text-left  text-xl text-gray-200">

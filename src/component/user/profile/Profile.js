@@ -20,12 +20,14 @@ export default function Profile() {
     // get id
     const {id} = useParams()
     const user = useSelector(state=>state.users)
-    const {profile,followed,unfollowed,profileAppErr,profileServerErr,profileLoading} = user;
+    const {profile,userAuth,followed,unfollowed,profileAppErr,profileServerErr,profileLoading} = user;
     // getting user details
     useEffect(()=>{
         dispatch(fetchUserDetailsAction(id))
     },[id,dispatch,followed,unfollowed])
     
+    const isProfileUser = profile?._id === userAuth?._id;
+    console.log(profile);
   return (
     <>
      <div className="min-h-screen bg-green-600 flex justify-center items-center">
@@ -84,17 +86,17 @@ export default function Profile() {
                             <DateFormatter date={profile?.createdAt} />{" "}
                           </p>
                           <p className="text-green-400 mt-2 mb-2">
-                            {profile?.posts.length} posts{" "}
-                            {profile?.followers.length} followers{" "}
-                            {profile?.following.length} following
+                            {profile?.posts?.length} posts{" "}
+                            {profile?.followers?.length} followers{" "}
+                            {profile?.following?.length} following
                           </p>
                           {/* Who view my profile */}
                           <div className="flex items-center  mb-2">
                             <EyeIcon className="h-5 w-5 " />
                             <div className="pl-2">
-                              {profile?.viewedBy?.length}{" "}
-                              <span className="text-indigo-400 cursor-pointer hover:underline">
-                                users viewed your profile
+                              {" "}
+                              <span className="text-indigo-400 cursor-pointer ">
+                                Number of viewer {profile?.viewedBy?.length}
                               </span>
                             </div>
                           </div>
@@ -115,7 +117,7 @@ export default function Profile() {
 
                         <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                           {/* // Hide follow button from the same */}
-                          <div>
+                         {!isProfileUser &&  <div>
                                 {profile?.isFollwing ? (
                                   <button
                                     onClick={() =>
@@ -149,7 +151,7 @@ export default function Profile() {
                                 )}
 
                                 <></>
-                              </div>
+                              </div> }
 
                           {/* Update Profile */}
 
@@ -197,28 +199,35 @@ export default function Profile() {
                 <div className="flex justify-center place-items-start flex-wrap  md:mb-0">
                   <div className="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                     <h1 className="text-center text-xl border-gray-500 mb-2 border-b-2">
-                      Who viewed my profile : 9
+                      Who viewed my profile : {profile?.viewedBy?.length}
                     </h1>
 
                     {/* Who view my post */}
                     <ul className="">
-                      <Link>
+                      {profile?.viewedBy?.length <= 0 ? <h1>No Views</h1> :
+                       profile?.viewedBy?.map((user)=>{
+                        
+                        return(
+                          <Link>
                         <div className="flex mb-2 items-center space-x-4 lg:space-x-6">
                           <img
                             className="w-16 h-16 rounded-full lg:w-20 lg:h-20"
-                            // src={user.profilePhoto}
-                            // alt={user?._id}
+                            src={user.profilePhoto}
+                            alt={user?._id}
                           />
                           <div className="font-medium text-lg leading-6 space-y-1">
                             <h3>
-                              {/* {user?.firstName} {user?.lastName} */}Name
+                              {user?.firstname} {user?.lastname}
                             </h3>
                             <p className="text-indigo-600">
-                              {/* {user.accountType} */} Account Type
+                              {user?.accountType} 
                             </p>
                           </div>
                         </div>
                       </Link>
+                        )
+                       })
+                      }
                     </ul>
                   </div>
                   {/* All my Post */}
