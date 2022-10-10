@@ -251,6 +251,62 @@ export const fetchUsersAction = createAsyncThunk(
     }
   }
 );
+// block user action 
+export const blockUserAction = createAsyncThunk(
+  "users/block",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    ///http
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/block-user/${id}`,
+        {},
+
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+// unblock user action 
+export const unblockUserAction = createAsyncThunk(
+  "users/unblock",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    ///http
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/unblock-user/${id}`,
+        {},
+
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
 const userLoginFormLoacalStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -415,6 +471,41 @@ const registerUsersSlices = createSlice({
       state.isUpdate = false;
     });
     builder.addCase(userUnfollowAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //user block action 
+    builder.addCase(blockUserAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    
+    builder.addCase(blockUserAction.fulfilled, (state, action) => {
+     
+      state.blocked = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+       
+    });
+    builder.addCase(blockUserAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //user unblock action 
+    builder.addCase(unblockUserAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    
+    builder.addCase(unblockUserAction.fulfilled, (state, action) => {
+     
+      state.unblocked = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(unblockUserAction.rejected, (state, action) => {
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
       state.loading = false;

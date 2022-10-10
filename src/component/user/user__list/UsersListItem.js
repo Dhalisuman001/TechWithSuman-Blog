@@ -1,9 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MailIcon } from "@heroicons/react/solid";
+import { blockUserAction, unblockUserAction } from "../../../redux/slices/users/userSlices";
+import { useDispatch } from "react-redux";
 
 const UsersListItem = ({user}) => {
-  console.log(user);
+  const dispatch = useDispatch();
+
+ 
+  
   return (
     <>
       <div className="p-8 mb-4 bg-white shadow rounded">
@@ -48,14 +53,14 @@ const UsersListItem = ({user}) => {
 
             {user?.isBlocked ? (
               <button
-                // onClick={() => dispatch(unBlockUserAction(user?.user?._id))}
+                onClick={() => dispatch(unblockUserAction(user?._id))}
                 className="inline-block py-1 px-2 text-center bg-gray-500 text-gray-300 mr-2 mb-1 lg:mb-0 text-xs border rounded"
               >
                 unblock
               </button>
             ) : (
               <button
-                // onClick={() => dispatch(blockUserAction(user?.user?._id))}
+                 onClick={() => dispatch(blockUserAction(user?._id))}
                 className="inline-block py-1 px-2 text-center bg-red-600 text-gray-300 mr-2 mb-1 lg:mb-0 text-xs border rounded"
               >
                 Block

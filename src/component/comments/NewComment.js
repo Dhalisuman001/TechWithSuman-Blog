@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createCommentAction } from "../../redux/slices/comments/commentsSlices";
 
 //Form schema
@@ -25,9 +25,14 @@ const AddComment = ({ postId }) => {
     },
     validationSchema: formSchema,
   });
+  const com = useSelector(state=>state?.comment)
+ const {appErr, serverErr , loading} = com;
   return (
+    
     <div className="flex flex-col justify-center items-center">
-      <form
+      {appErr || serverErr ? (<h2 className="text-red-500 mb-2">{serverErr} {appErr}</h2>) :null } 
+        
+          <form
         onSubmit={formik.handleSubmit}
         className="mt-1 flex max-w-sm m-auto"
       >
@@ -42,17 +47,25 @@ const AddComment = ({ postId }) => {
           placeholder="Add New comment"
         />
 
-        <button
+        {loading? <button
+          type="submit"
+          className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-gray-600  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Loading..
+        </button> : <button
           type="submit"
           className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Submit
-        </button>
+        </button>}
       </form>
       <div className="text-red-400 mb-2 mt-2">
         {formik.touched.description && formik.errors.description}
       </div>
-    </div>
+      </div>
+     
+   
+    
   );
 };
 
