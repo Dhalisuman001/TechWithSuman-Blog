@@ -21,6 +21,7 @@ import UsersList from "./component/user/user__list/UserList";
 import UpdatePassword from "./component/user/password/PasswordForm";
 import ResetPasswordForm from "./component/user/password/ResetPasswordForm";
 import ResetForm from "./component/user/password/ResetPassword";
+import AccountVerified from "./component/user/verification/AccountVerified";
 function App() {
   return (
     <Router>
@@ -149,6 +150,15 @@ function App() {
           element={
             
               <ResetForm/>
+            
+          }
+        />
+        <Route
+          exact
+          path="/verify-account/:token"
+          element={
+            
+              <AccountVerified/>
             
           }
         />
