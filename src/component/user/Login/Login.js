@@ -49,6 +49,7 @@ const Login = () => {
             <div className="flex flex-wrap items-center -mx-4">
               <div className="w-full lg:w-2/5 px-4">
                 <div className="px-6 lg:px-12 py-12 lg:py-24 bg-white shadow-lg rounded-lg">
+                 
                   {/* Form */}
                   <form onSubmit={formik.handleSubmit}>
                     <h3 className="mb-10 text-2xl font-bold font-heading">
@@ -57,7 +58,7 @@ const Login = () => {
                     </h3>
                     {/* display error */}
                     {serverErr || appErr ? (
-                      <h3 className="text-red-400">
+                      <h3 className="text-red-500">
                         {serverErr} - {appErr}
                       </h3>
                     ) : null}
