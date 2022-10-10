@@ -336,6 +336,60 @@ export const updatePasswordAction = createAsyncThunk(
     }
   }
 );
+// reset password token action 
+export const resetPasswordTokenAction = createAsyncThunk(
+  "users/reset-password-token",
+  async (email, { rejectWithValue, getState, dispatch }) => {
+    ///http
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/reset-password-token`,
+        {email},
+        config
+      );
+      // dispatch(resetUserPasswordAction());
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//Password reset verify
+export const passwordResetAction = createAsyncThunk(
+  "password/reset",
+  async (user, { rejectWithValue, getState, dispatch }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    //http call
+    try {
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/verify-password-token`,
+        { password: user?.password, token: user?.token },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 
 const userLoginFormLoacalStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -556,6 +610,48 @@ const registerUsersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(updatePasswordAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //reset password token action
+    builder.addCase(resetPasswordTokenAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    // builder.addCase(resetUserPasswordAction, (state, action) => {
+    //   state.isPassword = true;
+    // });
+    
+    builder.addCase(resetPasswordTokenAction.fulfilled, (state, action) => {
+     
+      state.passwordToken = action?.payload;
+      // state.isPassword = false;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(resetPasswordTokenAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //reset password  action
+    builder.addCase(passwordResetAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    // builder.addCase(resetUserPasswordAction, (state, action) => {
+    //   state.isPassword = true;
+    // });
+    
+    builder.addCase(passwordResetAction.fulfilled, (state, action) => {
+     
+      state.resetPassword = action?.payload;
+      // state.isPassword = false;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetAction.rejected, (state, action) => {
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
       state.loading = false;

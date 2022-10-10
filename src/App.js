@@ -19,6 +19,8 @@ import UpdateProfileForm from "./component/user/profile/UploadProfile";
 import SendEmail from "./component/user/email/SendEmail";
 import UsersList from "./component/user/user__list/UserList";
 import UpdatePassword from "./component/user/password/PasswordForm";
+import ResetPasswordForm from "./component/user/password/ResetPasswordForm";
+import ResetForm from "./component/user/password/ResetPassword";
 function App() {
   return (
     <Router>
@@ -127,9 +129,27 @@ function App() {
           exact
           path="/update-password"
           element={
-            <AdminRoute>
-              <UpdatePassword />
-            </AdminRoute>
+            <PrivateRoute><UpdatePassword /></PrivateRoute>
+              
+            
+          }
+        />
+        <Route
+          exact
+          path="/reset-password-token"
+          element={
+            
+              <ResetPasswordForm/>
+            
+          }
+        />
+        <Route
+          exact
+          path="/reset-password/:token"
+          element={
+            
+              <ResetForm/>
+            
           }
         />
         <Route exact path="/posts" element={<PostsList />} />
