@@ -255,7 +255,7 @@ export default function Profile() {
                       </div>
                       <div className="w-full lg:w-3/4 px-3">
                         <Link
-                          to={`/post/${post?._id}`}
+                          to={`/posts/${post?._id}`}
                           className="hover:underline"
                         >
                           <h3 className="mb-1 text-2xl text-green-400 font-bold font-heading">

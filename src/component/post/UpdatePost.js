@@ -31,7 +31,7 @@ export default function UpdatePost(props) {
   const postUpdate = useSelector((state) => state.post);
 
   const { postDetails, isUpdated } = postData;
-  const { loading, appErr, serverErr, postUpdated } = postUpdate;
+  const { loading, appErr, serverErr } = postUpdate;
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -52,7 +52,7 @@ export default function UpdatePost(props) {
     validationSchema: formSchema,
   });
 
-  if (isUpdated) return <Navigate to="/posts" />;
+  if (isUpdated) return <Navigate to={-1} />;
 
   return (
     <>

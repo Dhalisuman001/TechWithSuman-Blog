@@ -6,6 +6,7 @@ import { BaseUrl } from "../../utils/BaseUrl";
 
 //reset user update action
 const resetUserUpdateAction = createAction('reset/update/user');
+const resetUserPasswordAction = createAction('reset/password/user');
 
 //register action
 export const registerUserAction = createAsyncThunk(
@@ -307,6 +308,34 @@ export const unblockUserAction = createAsyncThunk(
     }
   }
 );
+// update user password action 
+export const updatePasswordAction = createAsyncThunk(
+  "users/update-password",
+  async (password, { rejectWithValue, getState, dispatch }) => {
+    ///http
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${BaseUrl}/api/v1/users/password`,
+        {password},
+        config
+      );
+      dispatch(resetUserPasswordAction());
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
 const userLoginFormLoacalStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -506,6 +535,27 @@ const registerUsersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(unblockUserAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
+    //update password action
+    builder.addCase(updatePasswordAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(resetUserPasswordAction, (state, action) => {
+      state.isPassword = true;
+    });
+    
+    builder.addCase(updatePasswordAction.fulfilled, (state, action) => {
+     
+      state.passwordUpdated = action?.payload;
+      state.isPassword = false;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(updatePasswordAction.rejected, (state, action) => {
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
       state.loading = false;

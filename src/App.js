@@ -18,6 +18,7 @@ import UploadProfilePhoto from "./component/user/profile/UploadProfilePhoto";
 import UpdateProfileForm from "./component/user/profile/UploadProfile";
 import SendEmail from "./component/user/email/SendEmail";
 import UsersList from "./component/user/user__list/UserList";
+import UpdatePassword from "./component/user/password/PasswordForm";
 function App() {
   return (
     <Router>
@@ -119,6 +120,15 @@ function App() {
           element={
             <AdminRoute>
               <SendEmail />
+            </AdminRoute>
+          }
+        />
+        <Route
+          exact
+          path="/update-password"
+          element={
+            <AdminRoute>
+              <UpdatePassword />
             </AdminRoute>
           }
         />
