@@ -5,16 +5,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { LockClosedIcon } from "@heroicons/react/solid";
  import { passwordResetAction } from "../../../redux/slices/users/userSlices";
-import { BaseUrl } from "../../../redux/utils/BaseUrl";
+
 
 //Form schema
 const formSchema = Yup.object({
   password: Yup.string().required("Password is required"),
 });
 
-const ResetPassword = (props) => {
+const ResetPassword = () => {
   const {token} = useParams();
-  console.log(props);
   const navigate = useNavigate()
   
 // console.log(token);
@@ -66,7 +65,7 @@ const ResetPassword = (props) => {
             Password Reset
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            <a className="font-medium text-indigo-600 hover:text-indigo-500">
+            <a className="font-medium text-indigo-600 hover:text-indigo-500" href="none">
               Reset your password if you have forgotten
             </a>
           </p>
