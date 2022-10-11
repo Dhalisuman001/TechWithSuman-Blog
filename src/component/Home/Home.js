@@ -1,9 +1,9 @@
 import React from "react";
-import poster from "../../asset/poster.png";
+import poster from "../../asset/logo.png";
 const Home = () => {
   return (
-    <section className="pb-10 bg-gray-800">
-      <div className="relative container px-4   mx-auto">
+    <section className="pb-10 bg-gray-800 h-screen">
+      <div className="relative container px-4 pt-2  mx-auto">
         <div className="flex flex-wrap items-center -mx-4 mb-10 2xl:mb-14">
           <div className="w-full lg:w-1/2 px-4 mb-16 lg:mb-0">
             <span className="text-lg font-bold text-blue-400">

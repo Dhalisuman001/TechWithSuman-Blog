@@ -1,1 +1,1 @@
-export const BaseUrl = "http://localhost:4000";
+export const BaseUrl = "https://techwiithsuman-blog.herokuapp.com" || "http://localhoat:4000";
