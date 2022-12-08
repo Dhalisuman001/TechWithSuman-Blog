@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { CheckIcon } from "@heroicons/react/outline";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
- import { accountVerifiedLinkAction } from "../../../redux/slices/account/AccountVerification";
+import { accountVerifiedLinkAction } from "../../../redux/slices/account/AccountVerification";
 import { logoutUserAction } from "../../../redux/slices/users/userSlices";
 export default function AccountVerified() {
-    const {token} = useParams();
+  const { token } = useParams();
   //dispatch
   const dispatch = useDispatch();
   //verify account
@@ -14,9 +14,8 @@ export default function AccountVerified() {
   }, [dispatch, token]);
 
   //store
-  const accountVerification = useSelector(state => state.verification);
-  const {  isVerified, verified } =
-    accountVerification;
+  const accountVerification = useSelector((state) => state.verification);
+  const { verified } = accountVerification;
 
   return (
     <>

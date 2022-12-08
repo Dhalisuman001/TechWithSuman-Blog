@@ -17,7 +17,7 @@ const PostsList = () => {
   const posts = useSelector((state) => state?.post);
   const category = useSelector((state) => state?.category);
 
-  const { postlist, appErr, serverErr, loading, likes, dislikes } = posts;
+  const { postlist, appErr, serverErr, likes, dislikes } = posts;
   //dispstch
   const dispatch = useDispatch();
   //fetch post
@@ -194,8 +194,10 @@ const PostsList = () => {
                             </div>
                             <div className="ml-3">
                               <p className="text-sm font-medium text-gray-900">
-                                <Link to={`/profile/${item?.author?._id}`} 
-                                 className="text-yellow-400 hover:underline ">
+                                <Link
+                                  to={`/profile/${item?.author?._id}`}
+                                  className="text-yellow-400 hover:underline "
+                                >
                                   {item?.author?.firstname}{" "}
                                   {item?.author?.lastname}
                                 </Link>

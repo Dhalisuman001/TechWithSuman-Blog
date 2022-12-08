@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { LockClosedIcon } from "@heroicons/react/solid";
- import { resetPasswordTokenAction } from "../../../redux/slices/users/userSlices";
+import { resetPasswordTokenAction } from "../../../redux/slices/users/userSlices";
 
 //Form schema
 const formSchema = Yup.object({
@@ -17,15 +17,15 @@ const ResetPasswordForm = () => {
     initialValues: {
       email: "",
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       //dispath the action
-       dispatch(resetPasswordTokenAction(values?.email));
+      dispatch(resetPasswordTokenAction(values?.email));
     },
     validationSchema: formSchema,
   });
 
   //select data from store
-  const users = useSelector(state => state?.users);
+  const users = useSelector((state) => state?.users);
   const { passwordToken, loading, appErr, serverErr } = users;
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -35,7 +35,10 @@ const ResetPasswordForm = () => {
             Password Reset Form
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            <a className="font-medium text-indigo-600 hover:text-indigo-500" href="null">
+            <a
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+              href="null"
+            >
               Reset your password if you have forgotten
             </a>
           </p>

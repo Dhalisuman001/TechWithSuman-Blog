@@ -11,7 +11,7 @@ const CategoryDropDown = (props) => {
   }, [dispatch]);
   //select categories
   const category = useSelector((state) => state?.category);
-  const { categoryList, loading, appErr, serverErr } = category;
+  const { categoryList, loading } = category;
 
   const allCategories = categoryList?.map((category) => {
     return {

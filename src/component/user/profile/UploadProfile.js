@@ -1,9 +1,12 @@
 import React from "react";
 import { useFormik } from "formik";
-import { Navigate, Redirect, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import {updateUserAction,fetchUserDetailsAction} from '../../../redux/slices/users/userSlices'
+import {
+  updateUserAction,
+  fetchUserDetailsAction,
+} from "../../../redux/slices/users/userSlices";
 import { useEffect } from "react";
 //Form schema
 const formSchema = Yup.object({
@@ -14,47 +17,49 @@ const formSchema = Yup.object({
 });
 
 const UpdateProfileForm = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchUserDetailsAction(id));
-  
-  
-  }, [dispatch, id])
-  
-  //get user from store
-  const user = useSelector(state=>state.users);
+  }, [dispatch, id]);
 
-  const {profile,appErr,serverErr,loading,isUpdate} = user;
-// console.log(profile);
+  //get user from store
+  const user = useSelector((state) => state.users);
+
+  const { profile, appErr, serverErr, loading, isUpdate } = user;
+  // console.log(profile);
 
   //formik
   const formik = useFormik({
-    enableReinitialize:true,
+    enableReinitialize: true,
     initialValues: {
       firstname: profile?.firstname,
       lastname: profile?.lastname,
-      email:profile?.email,
+      email: profile?.email,
       bio: profile?.bio,
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       //dispath the action
-       dispatch(updateUserAction(values));
+      dispatch(updateUserAction(values));
       console.log(values);
     },
     validationSchema: formSchema,
   });
-  if (isUpdate)return  <Navigate to={`/profile/${id}`}/>;
-    
-  
+  if (isUpdate) return <Navigate to={`/profile/${id}`} />;
+
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h3 className="mt-6 text-center text-3xl font-extrabold text-gray-300">
-          Hey <span className="text-green-500">{profile?.firstname}</span>,Do you want to update your profile?
+          Hey <span className="text-green-500">{profile?.firstname}</span>,Do
+          you want to update your profile?
         </h3>
-        {serverErr || appErr ? <h2 className="text-red-500 text-center">{serverErr} {appErr}</h2>:null }
+        {serverErr || appErr ? (
+          <h2 className="text-red-500 text-center">
+            {serverErr} {appErr}
+          </h2>
+        ) : null}
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -157,19 +162,21 @@ const UpdateProfileForm = () => {
             </div>
             <div>
               {/* submit btn */}
-              {loading?
-              <button
-              disabled
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600s focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Update..
-            </button>:
-            <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Update
-          </button>}
+              {loading ? (
+                <button
+                  disabled
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600s focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Update..
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Update
+                </button>
+              )}
             </div>
           </form>
 
