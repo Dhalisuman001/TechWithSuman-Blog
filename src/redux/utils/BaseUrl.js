@@ -1,2 +1,2 @@
 export const BaseUrl =
-  "https://techwiithsuman-blog.herokuapp.com" || "http://localhoat:8080";
+  "https://tech-blog-server-zxtj.onrender.com" || "http://localhoat:8080";
